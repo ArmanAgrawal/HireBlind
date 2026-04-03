@@ -656,3 +656,45 @@ tr:hover {
 .modal-close:hover {
     color: var(--danger);
 }
+
+/* User Menu */
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-badge {
+    padding: 4px 12px;
+    background: var(--light-gray);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--dark);
+}
+
+.logout-btn {
+    padding: 4px 12px;
+    background: var(--danger);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.3s;
+}
+
+.logout-btn:hover {
+    background: #c53030;
+}
+
+@media (max-width: 768px) {
+    .user-menu {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .logout-btn {
+        width: 100%;
+    }
+}

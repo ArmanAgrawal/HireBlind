@@ -6,10 +6,12 @@ import fitz  # ✅ correct import
 import uuid
 
 from .database import engine, get_db, Base
-from .models import Job, Candidate, AuditRedaction, Decision
-from .schemas import JobCreate, JobResponse, CandidateResponse, DecisionCreate
+from .models import Job, Candidate, AuditRedaction, Decision,User
+from .schemas import JobCreate, JobResponse, CandidateResponse, DecisionCreate,UserCreate,UserLogin,TokenResponse,UserResponse
 from .redactor import PIIRedactor
 from .scoring import ScoringEngine
+from .auth import get_password_hash, verify_password, create_access_token, get_current_user, get_current_admin, get_current_recruiter
+
 
 # Create tables
 Base.metadata.create_all(bind=engine)
@@ -29,6 +31,60 @@ app.add_middleware(
 redactor = PIIRedactor()
 scoring_engine = ScoringEngine()
 
+
+
+@app.post("/api/auth/register", response_model=TokenResponse)
+def register(user_data: UserCreate, db: Session = Depends(get_db)):
+    """Register a new user"""
+    # Check if user exists
+    existing_user = db.query(User).filter(User.email == user_data.email).first()
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    
+    # Create new user
+    hashed_password = get_password_hash(user_data.password)
+    new_user = User(
+        email=user_data.email,
+        password=hashed_password,
+        name=user_data.name,
+        role=user_data.role
+    )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    
+    # Create token
+    access_token = create_access_token(data={"sub": new_user.id, "role": new_user.role})
+    
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": new_user
+    }
+
+@app.post("/api/auth/login", response_model=TokenResponse)
+def login(user_data: UserLogin, db: Session = Depends(get_db)):
+    """Login user"""
+    user = db.query(User).filter(User.email == user_data.email).first()
+    if not user or not verify_password(user_data.password, user.password):
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+    
+    if not user.is_active:
+        raise HTTPException(status_code=401, detail="Account disabled")
+    
+    # Create token
+    access_token = create_access_token(data={"sub": user.id, "role": user.role})
+    
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": user
+    }
+
+@app.get("/api/auth/me", response_model=UserResponse)
+def get_me(current_user: User = Depends(get_current_user)):
+    """Get current user info"""
+    return current_user
 
 # ------------------- JOB -------------------
 

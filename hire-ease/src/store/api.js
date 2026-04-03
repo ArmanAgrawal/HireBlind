@@ -70,6 +70,13 @@ export const auditAPI = {
     getLog: (jobId) => fetchAPI(`/jobs/${jobId}/audit`),
 };
 
+export const authAPI = {
+    register: (data) => fetchAPI('/auth/register', { method: 'POST', body: JSON.stringify(data) }),
+    login: (data) => fetchAPI('/auth/login', { method: 'POST', body: JSON.stringify(data) }),
+    getMe: () => fetchAPI('/auth/me'),
+};
+
+
 // Default export for convenience
 const api = {
     post: (endpoint, data) => fetchAPI(endpoint, { method: 'POST', body: JSON.stringify(data) }),

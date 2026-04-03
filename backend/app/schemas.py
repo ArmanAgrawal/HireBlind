@@ -1,7 +1,29 @@
-from pydantic import BaseModel
+from pydantic import BaseModel,EmailStr
 from typing import List, Dict, Optional, Any
 from datetime import datetime
 
+
+class UserCreate(BaseModel):
+    email: EmailStr
+    password: str
+    name: str
+    role: str = "recruiter"  # admin or recruiter
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+class UserResponse(BaseModel):
+    id: str
+    email: str
+    name: str
+    role: str
+    created_at: datetime
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str
+    user: UserResponse
 
 # ------------------- JOB -------------------
 
