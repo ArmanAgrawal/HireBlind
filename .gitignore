@@ -1,0 +1,30 @@
+# Python virtual environment
+backend/venv/
+
+# Node modules
+node_modules/
+
+# Environment variables
+backend/.env
+
+# SQLite database
+backend/test.db
+
+# Optional but recommended additions:
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# macOS/Linux temp files
+*.swp

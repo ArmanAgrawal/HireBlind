@@ -1,0 +1,10 @@
+{
+  "title": "Senior Full-Stack Engineer (AI Systems)",
+  "jd_text": "We are seeking a developer with 5+ years of experience to build high-performance APIs using FastAPI and dynamic frontends with React. The ideal candidate must have a deep understanding of PostgreSQL and experience deploying AI models. Responsibilities include maintaining scalable cloud infrastructure and ensuring data privacy compliance.",
+  "weights": {
+    "FastAPI": 40,
+    "React": 30,
+    "PostgreSQL": 20,
+    "AI_Compliance": 10
+  }
+}
